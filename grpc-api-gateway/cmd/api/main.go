@@ -3,8 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/ashiqsabith123/shiftsync-grps-api-gateway/pkg/auth/routes"
-	"github.com/ashiqsabith123/shiftsync-grps-api-gateway/pkg/config"
+	auth "github.com/ashiqsabith123/shiftsync-grpc-api-gateway/pkg/auth/routes"
+	"github.com/ashiqsabith123/shiftsync-grpc-api-gateway/pkg/config"
+	punch "github.com/ashiqsabith123/shiftsync-grpc-api-gateway/pkg/punch/routes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +18,8 @@ func main() {
 
 	r := gin.Default()
 
-	routes.RegisterEmployeeRoutes(r, &c)
+	auth.RegisterAuthEmployeeRoutes(r, c)
+	punch.RegisterPunchEmployeeRoutes(r, c)
 
 	r.Run(":3000")
 

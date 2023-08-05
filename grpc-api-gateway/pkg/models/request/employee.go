@@ -8,3 +8,12 @@ type SignUp struct {
 	UserName  string `json:"username"`
 	Password  string `json:"password"`
 }
+
+type OtpStruct struct {
+	Code string `json:"otp"`
+}
+
+type LoginStruct struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

@@ -7,7 +7,9 @@ import "google/protobuf/any.proto";
 option go_package = "./pkg/auth/pb";
 
 service AuthService {
-    rpc PostSignup(SignUpRequest) returns (SignUpResponse){}
+    rpc PostSignup(SignUpRequest) returns (Response){}
+    rpc VerifyOtp(VerifyOtpRequest)returns (Response){}
+    rpc PostLogin(LoginRequest)returns(Response){}
 }
 
 message SignUpRequest {
@@ -19,10 +21,20 @@ message SignUpRequest {
     string password=6;
 }
 
-message SignUpResponse {
-   int32 statuscode =1;
-   string message =2;
-   google.protobuf.Any errors = 3;
-   google.protobuf.Any data = 4;
-   
+message VerifyOtpRequest{
+    string code =1;
+    string cookie =2;
 }
+
+message LoginRequest{
+    string username=1;
+    string password=2;
+}
+
+message Response {
+    int32 statuscode =1;
+    string message =2;
+    google.protobuf.Any errors = 3;
+    google.protobuf.Any data = 4;
+    
+ }
