@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package punch;
+
+option go_package="./pkg/punch/pb";
+
+import "google/protobuf/any.proto";
+
+service PunchService{
+    rpc PunchIn(PunchInRequest)returns(Response){}
+    rpc VerifyOtpPunchin(PunchInRequestOtp)returns(Response){}
+    rpc PunchOut(PunchOutRequest)returns(Response){}
+    rpc GetDuty(GetDutyRequest)returns(Response){}
+}
+
+
+message PunchInRequest{
+    int32 id = 1;
+
+}
+
+message PunchOutRequest{
+    int32 id = 1;
+   
+}
+
+message PunchInRequestOtp{
+    int32 id=1;
+    string code = 2;
+  
+}
+
+message GetDutyRequest{
+    int32 id =1;
+}
+
+message GetDutyResponce{
+    string dutyType =1;
+    string time =2;
+}
+
+message Response {
+    int32 statuscode = 1;
+    string message =    2;
+    google.protobuf.Any errors = 3;
+    google.protobuf.Any data = 4;
+    
+}

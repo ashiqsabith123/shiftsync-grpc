@@ -2,10 +2,20 @@
     "port":{
         "gateway-port":"3000",
         "auth-service-port":":50051",
-        "punch-service-port":":50052"
+        "punch-service-port":":50052",
+        "form-service-port":":50053"
     },
 
     "jwt":{
-        "secret_key":"RTyy12@q"
+        "secret_key":"RTyy12@qwq"
+    },
+
+    "db":{
+        "host":"localhost",
+        "user":"ashiq",
+        "password":"ashiq123",
+        "dbname":"shiftsync_grpc",
+        "port":"5432"
     }
+
 }

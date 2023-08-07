@@ -1,0 +1,17 @@
+{
+    "db":{
+        "host":"localhost",
+        "user":"ashiq",
+        "password":"ashiq123",
+        "dbname":"shiftsync_grpc",
+        "port":"5432"
+    },
+
+    "crypto":{
+        "secret":"a45bfaa55af146c18261d60"
+    },
+
+    "svc-port":{
+        "port":":50053"
+    }
+}

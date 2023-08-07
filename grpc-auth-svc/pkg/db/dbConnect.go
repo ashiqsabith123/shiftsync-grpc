@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/ashiqsabith123/shiftsync-grpc-auth-svc/pkg/config"
-	"github.com/ashiqsabith123/shiftsync-grpc-auth-svc/pkg/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,10 +17,6 @@ func ConnectDatabase(config config.Config) *gorm.DB {
 		log.Fatal("Failed to connect database")
 		return nil
 	}
-
-	db.AutoMigrate(
-		domain.Employee{},
-	)
 
 	fmt.Println("Connected succesfully....!")
 

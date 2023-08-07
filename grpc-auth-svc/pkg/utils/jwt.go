@@ -30,12 +30,12 @@ func GenerateTokens(id uint) (string, error) {
 func GenerateTokenForOtp(val domain.Employee) (string, error) {
 	var expiryTime = time.Now().Add(10 * time.Minute).Unix()
 	claims := request.OtpCookieStruct{
-		First_name: val.Firstname,
-		Last_name:  val.Lastname,
-		Email:      val.Email,
-		Phone:      val.Phone,
-		User_name:  val.Username,
-		Pass_word:  val.Password,
+		Firstname: val.Firstname,
+		Lastname:  val.Lastname,
+		Email:     val.Email,
+		Phone:     val.Phone,
+		Username:  val.Username,
+		Password:  val.Password,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiryTime,
 		},

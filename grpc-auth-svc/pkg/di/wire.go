@@ -12,13 +12,13 @@ import (
 	"github.com/google/wire"
 )
 
-func InitializeApi(config config.Config) service.EmployeeHandler {
+func InitializeApi(config config.Config) service.AuthService {
 	wire.Build(
 		db.ConnectDatabase,
 		repository.NewEmployeeRepository,
 		usecases.NewEmployeeUseCase,
-		service.NewEmployeeHandler,
+		service.NewAuthService,
 	)
-	return service.EmployeeHandler{}
+	return service.AuthService{}
 
 }

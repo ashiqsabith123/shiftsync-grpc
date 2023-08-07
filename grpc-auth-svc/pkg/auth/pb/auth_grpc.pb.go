@@ -22,7 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
-	PostSignup(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
+	PostSignup(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*Response, error)
+	VerifyOtp(ctx context.Context, in *VerifyOtpRequest, opts ...grpc.CallOption) (*Response, error)
+	PostLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
 }
 
 type authServiceClient struct {
@@ -33,9 +35,27 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
 }
 
-func (c *authServiceClient) PostSignup(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error) {
-	out := new(SignUpResponse)
+func (c *authServiceClient) PostSignup(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
 	err := c.cc.Invoke(ctx, "/auth.AuthService/PostSignup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) VerifyOtp(ctx context.Context, in *VerifyOtpRequest, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/auth.AuthService/VerifyOtp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) PostLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/auth.AuthService/PostLogin", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +66,9 @@ func (c *authServiceClient) PostSignup(ctx context.Context, in *SignUpRequest, o
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
 type AuthServiceServer interface {
-	PostSignup(context.Context, *SignUpRequest) (*SignUpResponse, error)
+	PostSignup(context.Context, *SignUpRequest) (*Response, error)
+	VerifyOtp(context.Context, *VerifyOtpRequest) (*Response, error)
+	PostLogin(context.Context, *LoginRequest) (*Response, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -54,8 +76,14 @@ type AuthServiceServer interface {
 type UnimplementedAuthServiceServer struct {
 }
 
-func (UnimplementedAuthServiceServer) PostSignup(context.Context, *SignUpRequest) (*SignUpResponse, error) {
+func (UnimplementedAuthServiceServer) PostSignup(context.Context, *SignUpRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostSignup not implemented")
+}
+func (UnimplementedAuthServiceServer) VerifyOtp(context.Context, *VerifyOtpRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyOtp not implemented")
+}
+func (UnimplementedAuthServiceServer) PostLogin(context.Context, *LoginRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostLogin not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -88,6 +116,42 @@ func _AuthService_PostSignup_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_VerifyOtp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyOtpRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).VerifyOtp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.AuthService/VerifyOtp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).VerifyOtp(ctx, req.(*VerifyOtpRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_PostLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).PostLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.AuthService/PostLogin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).PostLogin(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +162,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostSignup",
 			Handler:    _AuthService_PostSignup_Handler,
+		},
+		{
+			MethodName: "VerifyOtp",
+			Handler:    _AuthService_VerifyOtp_Handler,
+		},
+		{
+			MethodName: "PostLogin",
+			Handler:    _AuthService_PostLogin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

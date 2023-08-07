@@ -21,11 +21,21 @@ func (e *employeeDatabase) FindEmployee(cntxt context.Context, find domain.Emplo
 
 	var emp domain.Employee
 
-	if err := e.DB.Where("id= ? OR email = ? OR phone = ? OR user_name = ?", find.ID, find.Email, find.Phone, find.Username).First(&emp).Error; err != nil {
+	if err := e.DB.Where("id= ? OR email = ? OR phone = ? OR username = ?", find.ID, find.Email, find.Phone, find.Username).First(&emp).Error; err != nil {
 
 		return find, errors.New("no user found")
 	}
 
 	cntxt.Done()
 	return emp, nil
+}
+
+func (e *employeeDatabase) AddEmployee(cntxt context.Context, emp domain.Employee) error {
+
+	if err := e.DB.Create(&emp).Error; err != nil {
+		return errors.Join(errors.New("error from here"), err)
+	}
+
+	//err := e.DB.Raw("INSERT INTO employees (first_name, last_name, email, user_name, pass_word, phone) VALUES (?, ?, ?, ?, ?, ?) RETURNING id", emp.First_name, emp.Last_name, emp.Email, emp.User_name, emp.Pass_word, emp.Phone).Error
+	return nil
 }

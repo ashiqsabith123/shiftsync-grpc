@@ -5,16 +5,15 @@ import (
 	"log"
 	"net"
 
+	"github.com/ashiqsabith123/shiftsync-grpc-auth-svc/pkg/auth/pb"
 	"github.com/ashiqsabith123/shiftsync-grpc-auth-svc/pkg/config"
 	"github.com/ashiqsabith123/shiftsync-grpc-auth-svc/pkg/di"
-	"github.com/ashiqsabith123/shiftsync-grpc-auth-svc/pkg/pb"
 	"github.com/ashiqsabith123/shiftsync-grpc-auth-svc/pkg/verification"
 	"google.golang.org/grpc"
 )
 
 func main() {
 	config, err := config.LoadConfig()
-
 	if err != nil {
 		log.Fatal("Error while loading config", err)
 	}
@@ -22,10 +21,8 @@ func main() {
 	verification.InitTwilio(config)
 
 	service := di.InitializeApi(config)
-	fmt.Println("port", config.Port.SvcPort)
 
 	lis, err := net.Listen("tcp", config.Port.SvcPort)
-
 	if err != nil {
 		log.Fatalln("Failed to listening:", err)
 	}

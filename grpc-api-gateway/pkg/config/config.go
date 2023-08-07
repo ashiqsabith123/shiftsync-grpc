@@ -6,6 +6,7 @@ type ports struct {
 	GatewayPort      string `mapstructure:"gateway-port"`
 	AuthServicePort  string `mapstructure:"auth-service-port"`
 	PunchServicePort string `mapstructure:"punch-service-port"`
+	FormServicePort string `mapstructure:"form-service-port"`
 }
 
 type JWTConfig struct {
@@ -15,6 +16,15 @@ type JWTConfig struct {
 type Config struct {
 	PORTS ports     `mapstructure:"port"`
 	JWT   JWTConfig `mapstructure:"jwt"`
+	Db    DBConfig  `mapstructure:"db"`
+}
+
+type DBConfig struct {
+	DbHost     string `mapstructure:"host"`
+	DbName     string `mapstructure:"dbname"`
+	DbPort     string `mapstructure:"port"`
+	DbUser     string `mapstructure:"user"`
+	DbPaswword string `mapstructure:"password"`
 }
 
 var config Config

@@ -16,10 +16,10 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeApi(config2 config.Config) service.EmployeeHandler {
+func InitializeApi(config2 config.Config) service.AuthService {
 	gormDB := db.ConnectDatabase(config2)
 	employeeRepository := repository.NewEmployeeRepository(gormDB)
 	employeeUseCase := usecases.NewEmployeeUseCase(employeeRepository)
-	employeeHandler := service.NewEmployeeHandler(employeeUseCase)
-	return employeeHandler
+	authService := service.NewAuthService(employeeUseCase)
+	return authService
 }

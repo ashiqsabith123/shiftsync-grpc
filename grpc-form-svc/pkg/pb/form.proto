@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package form;
+
+option go_package = "./pkg/form/pb";
+
+import "google/protobuf/any.proto";
+
+service FormService{
+    rpc PostForm(FormRequest)returns(Response){}
+}
+
+message FormRequest {
+    int32 id = 13;
+    string gender = 1;
+    string maritalStatus = 2;
+    string dateOfBirth = 3;
+    string pAddress = 4;
+    string cAddress = 5;
+    string accountNo = 6;
+    string ifscCode = 7;
+    string nameAsPerPassbook = 8;
+    string panNumber = 9;
+    string adhaarNo = 10;
+    string designation = 11;
+    string photo = 12;
+}
+
+
+message Response {
+    int32 statuscode =1;
+    string message =2;
+    google.protobuf.Any errors = 3;
+    google.protobuf.Any data = 4;
+    
+ }
+
+

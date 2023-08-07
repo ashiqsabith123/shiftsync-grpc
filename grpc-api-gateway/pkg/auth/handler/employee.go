@@ -102,8 +102,10 @@ func PostLogin(ctx *gin.Context, c pb.AuthServiceClient) {
 		return
 	}
 
+	//fmt.Println(res.Data.Value)
+
 	ctx.SetCookie("_employee-cookie", string(res.Data.Value), 20*60, "", "", false, true)
 
-	resp := response.SuccessResponse(200, res.Message, nil)
+	resp := response.SuccessResponse(200, res.Message, string(res.Data.Value))
 	ctx.JSON(200, resp)
 }
