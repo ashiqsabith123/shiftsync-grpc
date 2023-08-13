@@ -23,6 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FormServiceClient interface {
 	PostForm(ctx context.Context, in *FormRequest, opts ...grpc.CallOption) (*Response, error)
+	ViewApplications(ctx context.Context, in *ViewApplicationRequest, opts ...grpc.CallOption) (*ViewApplicationResponce, error)
+	ApproveApplication(ctx context.Context, in *ApproveApplicationRequest, opts ...grpc.CallOption) (*Response, error)
+	ApplicationCorrection(ctx context.Context, in *ApplicationCorrectionRequest, opts ...grpc.CallOption) (*Response, error)
 }
 
 type formServiceClient struct {
@@ -42,11 +45,41 @@ func (c *formServiceClient) PostForm(ctx context.Context, in *FormRequest, opts 
 	return out, nil
 }
 
+func (c *formServiceClient) ViewApplications(ctx context.Context, in *ViewApplicationRequest, opts ...grpc.CallOption) (*ViewApplicationResponce, error) {
+	out := new(ViewApplicationResponce)
+	err := c.cc.Invoke(ctx, "/form.FormService/ViewApplications", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *formServiceClient) ApproveApplication(ctx context.Context, in *ApproveApplicationRequest, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/form.FormService/ApproveApplication", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *formServiceClient) ApplicationCorrection(ctx context.Context, in *ApplicationCorrectionRequest, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/form.FormService/ApplicationCorrection", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FormServiceServer is the server API for FormService service.
 // All implementations must embed UnimplementedFormServiceServer
 // for forward compatibility
 type FormServiceServer interface {
 	PostForm(context.Context, *FormRequest) (*Response, error)
+	ViewApplications(context.Context, *ViewApplicationRequest) (*ViewApplicationResponce, error)
+	ApproveApplication(context.Context, *ApproveApplicationRequest) (*Response, error)
+	ApplicationCorrection(context.Context, *ApplicationCorrectionRequest) (*Response, error)
 	mustEmbedUnimplementedFormServiceServer()
 }
 
@@ -56,6 +89,15 @@ type UnimplementedFormServiceServer struct {
 
 func (UnimplementedFormServiceServer) PostForm(context.Context, *FormRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostForm not implemented")
+}
+func (UnimplementedFormServiceServer) ViewApplications(context.Context, *ViewApplicationRequest) (*ViewApplicationResponce, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ViewApplications not implemented")
+}
+func (UnimplementedFormServiceServer) ApproveApplication(context.Context, *ApproveApplicationRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApproveApplication not implemented")
+}
+func (UnimplementedFormServiceServer) ApplicationCorrection(context.Context, *ApplicationCorrectionRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApplicationCorrection not implemented")
 }
 func (UnimplementedFormServiceServer) mustEmbedUnimplementedFormServiceServer() {}
 
@@ -88,6 +130,60 @@ func _FormService_PostForm_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FormService_ViewApplications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ViewApplicationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FormServiceServer).ViewApplications(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/form.FormService/ViewApplications",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FormServiceServer).ViewApplications(ctx, req.(*ViewApplicationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FormService_ApproveApplication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApproveApplicationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FormServiceServer).ApproveApplication(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/form.FormService/ApproveApplication",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FormServiceServer).ApproveApplication(ctx, req.(*ApproveApplicationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FormService_ApplicationCorrection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApplicationCorrectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FormServiceServer).ApplicationCorrection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/form.FormService/ApplicationCorrection",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FormServiceServer).ApplicationCorrection(ctx, req.(*ApplicationCorrectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FormService_ServiceDesc is the grpc.ServiceDesc for FormService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +194,18 @@ var FormService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostForm",
 			Handler:    _FormService_PostForm_Handler,
+		},
+		{
+			MethodName: "ViewApplications",
+			Handler:    _FormService_ViewApplications_Handler,
+		},
+		{
+			MethodName: "ApproveApplication",
+			Handler:    _FormService_ApproveApplication_Handler,
+		},
+		{
+			MethodName: "ApplicationCorrection",
+			Handler:    _FormService_ApplicationCorrection_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

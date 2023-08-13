@@ -22,8 +22,10 @@ func main() {
 	r := gin.Default()
 
 	auth.RegisterAuthEmployeeRoutes(r, c)
+	auth.RegisterAuthAdminRoutes(r, c)
 	punch.RegisterPunchEmployeeRoutes(r, c)
 	form.RegisterFormEmployeeRoutes(r, c)
+	form.RegisterFormAdminRoutes(r, c)
 
 	r.Run(":3000")
 

@@ -2,6 +2,7 @@
 
 // import (
 // 	"context"
+// 	"fmt"
 // 	"net/http"
 // 	"strconv"
 
@@ -36,6 +37,8 @@
 // 	form.Id = int32(tempid)
 // 	copier.Copy(&form, &tempForm)
 
+// 	fmt.Println("hello form")
+
 // 	res, _ := c.PostForm(context.Background(), &form)
 
 // 	if res.Statuscode >= 400 {
@@ -53,7 +56,9 @@ package handler
 
 import (
 	"context"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	// Replace with the correct import path for your protobuf package
@@ -63,13 +68,19 @@ import (
 	"github.com/ashiqsabith123/shiftsync-grpc-api-gateway/pkg/models/response"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"github.com/sirupsen/logrus"
 )
 
 func PostForm(ctx *gin.Context, c pb.FormServiceClient) {
-	// Create a new logrus.Logger instance
-	log := logrus.New()
-	log.SetFormatter(&logrus.JSONFormatter{})
+
+	logger := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
+
+	logFile, err := os.OpenFile("pkg/form/logs/log.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Failed to open log file: %v", err)
+	}
+	defer logFile.Close()
+
+	logger.SetOutput(logFile)
 
 	var tempForm models.Form
 
@@ -79,12 +90,7 @@ func PostForm(ctx *gin.Context, c pb.FormServiceClient) {
 		resp := response.ErrorResponse(500, "Employee id not found in cookie", "", nil)
 		ctx.JSON(http.StatusInternalServerError, resp)
 
-		// Log the error
-		log.WithFields(logrus.Fields{
-			"microservice": "API Gateway",
-			"endpoint":     ctx.FullPath(),
-			"error":        "Employee id not found in cookie",
-		}).Error("Error processing request")
+		logger.Printf("Service: Form SVC, End Point: %s, Error: %s, Status Code: %d", ctx.FullPath(), resp.Message, resp.StatusCode)
 
 		return
 	}
@@ -94,11 +100,6 @@ func PostForm(ctx *gin.Context, c pb.FormServiceClient) {
 		ctx.JSON(400, resp)
 
 		// Log the error
-		log.WithFields(logrus.Fields{
-			"microservice": "API Gateway",
-			"endpoint":     ctx.FullPath(),
-			"error":        err.Error(),
-		}).Error("Error processing request")
 
 		return
 	}
@@ -117,11 +118,7 @@ func PostForm(ctx *gin.Context, c pb.FormServiceClient) {
 		ctx.JSON(resp.StatusCode, resp)
 
 		// Log the error
-		log.WithFields(logrus.Fields{
-			"microservice": "API Gateway",
-			"endpoint":     ctx.FullPath(),
-			"error":        res.Message,
-		}).Error("Error processing request")
+		logger.Printf("Service: Form SVC, End Point: %s, Error: %s, Status Code: %d", ctx.FullPath(), resp.Message, resp.StatusCode)
 
 		return
 	}
@@ -129,10 +126,6 @@ func PostForm(ctx *gin.Context, c pb.FormServiceClient) {
 	resp := response.SuccessResponse(int(res.Statuscode), "Form submitted successfully pending for verification", nil)
 	ctx.JSON(resp.StatusCode, resp)
 
-	// Log the success
-	log.WithFields(logrus.Fields{
-		"microservice": "API Gateway",
-		"endpoint":     ctx.FullPath(),
-		"status_code":  res.Statuscode,
-	}).Info("Request processed successfully")
+	//Log the success
+
 }

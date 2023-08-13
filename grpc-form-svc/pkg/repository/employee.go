@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"encoding/base64"
-	"fmt"
 
 	"github.com/ashiqsabith123/shiftsync-grpc-form-svc/pkg/domain"
 	"github.com/ashiqsabith123/shiftsync-grpc-form-svc/pkg/encrypt"
@@ -22,7 +21,6 @@ func NewEmployeeRepository(DB *gorm.DB) repo.EmployeeRepository {
 
 func (e *employeeDatabase) CheckFormDetails(cntxt context.Context, form domain.Form) (domain.Form, bool) {
 
-	fmt.Println("b", form)
 	var details domain.Form
 	if err := e.DB.Where("form_id = ? OR account_no = ? OR pan_number = ? OR adhaar_no = ? ", form.FormID, base64.StdEncoding.EncodeToString(encrypt.Encrypt([]byte(form.Account_no))), base64.StdEncoding.EncodeToString(encrypt.Encrypt([]byte(form.Pan_number))), base64.StdEncoding.EncodeToString(encrypt.Encrypt([]byte(form.Adhaar_no)))).First(&details).Error; err != nil {
 

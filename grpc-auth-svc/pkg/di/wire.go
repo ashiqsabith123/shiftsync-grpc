@@ -16,7 +16,9 @@ func InitializeApi(config config.Config) service.AuthService {
 	wire.Build(
 		db.ConnectDatabase,
 		repository.NewEmployeeRepository,
+		repository.NewAdminRepository,
 		usecases.NewEmployeeUseCase,
+		usecases.NewAdminUseCase,
 		service.NewAuthService,
 	)
 	return service.AuthService{}

@@ -10,6 +10,8 @@ service AuthService {
     rpc PostSignup(SignUpRequest) returns (Response){}
     rpc VerifyOtp(VerifyOtpRequest)returns (Response){}
     rpc PostLogin(LoginRequest)returns(Response){}
+    rpc AdminPostSignup(SignUpRequest)returns(Response){}
+    rpc AdminPostLogin(LoginRequest)returns(Response){}
 }
 
 message SignUpRequest {
@@ -34,7 +36,7 @@ message LoginRequest{
 message Response {
     int32 statuscode =1;
     string message =2;
-    google.protobuf.Any errors = 3;
+    string errors = 3;
     google.protobuf.Any data = 4;
     
  }

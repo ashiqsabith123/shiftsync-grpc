@@ -20,6 +20,8 @@ func InitializeApi(config2 config.Config) service.AuthService {
 	gormDB := db.ConnectDatabase(config2)
 	employeeRepository := repository.NewEmployeeRepository(gormDB)
 	employeeUseCase := usecases.NewEmployeeUseCase(employeeRepository)
-	authService := service.NewAuthService(employeeUseCase)
+	adminRepository := repository.NewAdminRepository(gormDB)
+	adminUseCase := usecases.NewAdminUseCase(adminRepository)
+	authService := service.NewAuthService(employeeUseCase, adminUseCase)
 	return authService
 }

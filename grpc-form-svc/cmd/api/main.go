@@ -24,9 +24,7 @@ func main() {
 		log.Fatalln("Failed to listening:", err)
 	}
 
-	
-
-	fmt.Println("Auth Svc on", config.Port.SvcPort)
+	fmt.Println("Form Svc on", config.Port.SvcPort)
 
 	grpcServer := grpc.NewServer()
 

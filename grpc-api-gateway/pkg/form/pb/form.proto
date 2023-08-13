@@ -8,6 +8,9 @@ import "google/protobuf/any.proto";
 
 service FormService{
     rpc PostForm(FormRequest)returns(Response){}
+    rpc ViewApplications(ViewApplicationRequest)returns(ViewApplicationResponce){}
+    rpc ApproveApplication(ApproveApplicationRequest)returns(Response){}
+    rpc ApplicationCorrection(ApplicationCorrectionRequest)returns(Response){}
 }
 
 message FormRequest {
@@ -24,6 +27,42 @@ message FormRequest {
     string adhaarNo = 10;
     string designation = 11;
     string photo = 12;
+}
+
+message ViewApplicationRequest{}
+
+message ViewApplicationResponce{
+    string statuscode =1;
+    repeated ViewApplicationResponceArray responce = 2;
+}
+
+message ViewApplicationResponceArray{
+    int32 ID = 1;
+    string First_name = 2;
+    string Last_name = 3;
+    string Email = 4;
+    string Gender = 5;
+    string Marital_status = 6;
+    int64 Phone = 7;
+    string Date_of_birth = 8;
+    string P_address = 9;
+    string C_address = 10;
+    string Account_no = 11;
+    string Ifsc_code = 12;
+    string Name_as_per_passbokk = 13;
+    string Pan_number = 14;
+    string Designation = 15;
+    string Adhaar_no = 16;
+    string Photo = 17;
+}
+
+message ApproveApplicationRequest{
+    int32 id =1;
+}
+
+message ApplicationCorrectionRequest{
+     int32 formid =1;
+     string correction=2;
 }
 
 

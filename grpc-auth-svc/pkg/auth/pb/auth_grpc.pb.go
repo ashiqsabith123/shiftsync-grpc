@@ -25,6 +25,8 @@ type AuthServiceClient interface {
 	PostSignup(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*Response, error)
 	VerifyOtp(ctx context.Context, in *VerifyOtpRequest, opts ...grpc.CallOption) (*Response, error)
 	PostLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
+	AdminPostSignup(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*Response, error)
+	AdminPostLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error)
 }
 
 type authServiceClient struct {
@@ -62,6 +64,24 @@ func (c *authServiceClient) PostLogin(ctx context.Context, in *LoginRequest, opt
 	return out, nil
 }
 
+func (c *authServiceClient) AdminPostSignup(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/auth.AuthService/AdminPostSignup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) AdminPostLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/auth.AuthService/AdminPostLogin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -69,6 +89,8 @@ type AuthServiceServer interface {
 	PostSignup(context.Context, *SignUpRequest) (*Response, error)
 	VerifyOtp(context.Context, *VerifyOtpRequest) (*Response, error)
 	PostLogin(context.Context, *LoginRequest) (*Response, error)
+	AdminPostSignup(context.Context, *SignUpRequest) (*Response, error)
+	AdminPostLogin(context.Context, *LoginRequest) (*Response, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -84,6 +106,12 @@ func (UnimplementedAuthServiceServer) VerifyOtp(context.Context, *VerifyOtpReque
 }
 func (UnimplementedAuthServiceServer) PostLogin(context.Context, *LoginRequest) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostLogin not implemented")
+}
+func (UnimplementedAuthServiceServer) AdminPostSignup(context.Context, *SignUpRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdminPostSignup not implemented")
+}
+func (UnimplementedAuthServiceServer) AdminPostLogin(context.Context, *LoginRequest) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdminPostLogin not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -152,6 +180,42 @@ func _AuthService_PostLogin_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_AdminPostSignup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SignUpRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).AdminPostSignup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.AuthService/AdminPostSignup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).AdminPostSignup(ctx, req.(*SignUpRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_AdminPostLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).AdminPostLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.AuthService/AdminPostLogin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).AdminPostLogin(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +234,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostLogin",
 			Handler:    _AuthService_PostLogin_Handler,
+		},
+		{
+			MethodName: "AdminPostSignup",
+			Handler:    _AuthService_AdminPostSignup_Handler,
+		},
+		{
+			MethodName: "AdminPostLogin",
+			Handler:    _AuthService_AdminPostLogin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

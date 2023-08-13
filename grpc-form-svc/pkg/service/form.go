@@ -31,8 +31,8 @@ func (e *FormService) PostForm(ctx context.Context, req *pb.FormRequest) (*pb.Re
 		if err != nil {
 			return &pb.Response{
 				Statuscode: 400,
-				Message:    "Eroor when adding form",
-			}, err
+				Message:    err.Error(),
+			}, nil
 		}
 
 	}
